@@ -17,9 +17,9 @@ public class HrmsRestController {
     @Autowired
     private HrmsService hrmsService;
 
-    @GetMapping("/movies/{movieId}")
-    public Employee employee(@PathVariable("movieId") Integer movieId){
-        System.out.println("Movie Id is " + movieId);
+    @GetMapping("/employees/{employeeId}")
+    public Employee employee(@PathVariable("employeeId") Integer employeeId){
+        System.out.println("Movie Id is " + employeeId);
         return null;
     }
 

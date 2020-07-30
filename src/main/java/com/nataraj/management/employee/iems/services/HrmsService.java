@@ -28,6 +28,15 @@ public class HrmsService {
         throw new RuntimeException("Employee Not Found");
     }
 
+    @Transactional("hrmsTransactionManager")
+    public Employee update(Employee employee){
+        Optional<Employee> movie = hrmsDao.findById(1);
+        if(movie.isPresent()){
+            return movie.get();
+        }
+        throw new RuntimeException("Employee Not Found");
+    }
+
 
 
 }

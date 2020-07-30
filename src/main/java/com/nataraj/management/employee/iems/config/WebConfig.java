@@ -1,5 +1,6 @@
 package com.nataraj.management.employee.iems.config;
 
+import com.nataraj.management.employee.iems.markers.IgnoreDuringScan;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
@@ -17,6 +18,10 @@ import javax.servlet.*;
 import java.util.Optional;
 
 @Configuration
+@ComponentScan(
+        basePackages = {"com.nataraj.management.employee.iems.controllers"},
+        excludeFilters = {@ComponentScan.Filter(IgnoreDuringScan.class)}
+)
 public class WebConfig {
 
     @Bean
@@ -44,9 +49,13 @@ public class WebConfig {
             // Let us try to register contextLoaderListerner with a rootContext
             //registerApplicationSecurityServlet(servletContext);
             registerDispatcherServlet(servletContext);
+            registerPreprocessor(servletContext);
             //registerApplicationServletContextListener(servletContext);
 
 
+        }
+
+        protected static void registerPreprocessor(ServletContext servletContext) {
         }
 
         /*protected static void registerApplicationServletContextListener(ServletContext servletContext){
