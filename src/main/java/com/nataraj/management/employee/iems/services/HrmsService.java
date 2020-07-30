@@ -37,6 +37,12 @@ public class HrmsService {
         throw new RuntimeException("Employee Not Found");
     }
 
+    public void provideIncrement(Double increment,String place){
+        //hrmsDao.listByLocation(place);
+        //hrmsDao.updateSalary(increment,place);
+        //hrmsDao.findByLocation();
+    }
+
 
 
 }
