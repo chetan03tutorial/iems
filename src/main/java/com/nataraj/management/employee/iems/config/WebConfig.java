@@ -2,6 +2,7 @@ package com.nataraj.management.employee.iems.config;
 
 import com.nataraj.management.employee.iems.markers.IgnoreDuringScan;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
@@ -18,10 +19,6 @@ import javax.servlet.*;
 import java.util.Optional;
 
 @Configuration
-@ComponentScan(
-        basePackages = {"com.nataraj.management.employee.iems.controllers"},
-        excludeFilters = {@ComponentScan.Filter(IgnoreDuringScan.class)}
-)
 public class WebConfig {
 
     @Bean
@@ -48,7 +45,7 @@ public class WebConfig {
             // Chance to register our servlet, filters, listener, context etc
             // Let us try to register contextLoaderListerner with a rootContext
             //registerApplicationSecurityServlet(servletContext);
-            registerDispatcherServlet(servletContext);
+            //registerDispatcherServlet(servletContext);
             registerPreprocessor(servletContext);
             //registerApplicationServletContextListener(servletContext);
 
@@ -78,7 +75,7 @@ public class WebConfig {
              * 4. Set the servlet Mapping for the dispatcher servlet
              */
             AnnotationConfigWebApplicationContext servletWebAppContext = new AnnotationConfigWebApplicationContext();
-            servletWebAppContext.register(WebConfig.class);
+            servletWebAppContext.register(SevletWebAppContextConfig.class);
             FrameworkServlet dispatcherServlet = new DispatcherServlet(servletWebAppContext);
 
             ServletRegistration.Dynamic servletRegistration = servletContext.addServlet(DispatcherServlet.class.getName(), dispatcherServlet);

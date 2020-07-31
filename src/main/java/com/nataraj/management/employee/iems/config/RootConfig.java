@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Configuration
 @ComponentScan(
-        basePackages = {"com.nataraj.management.employee.iems.services"},
+        basePackages = {"com.nataraj.management.employee.iems"},
         excludeFilters = {@ComponentScan.Filter(IgnoreDuringScan.class)}
         )
 @Import(DbConfig.class)

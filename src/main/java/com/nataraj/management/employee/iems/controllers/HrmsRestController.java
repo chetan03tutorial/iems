@@ -15,7 +15,6 @@ import java.util.function.BiFunction;
 
 @RestController
 @RequestMapping("/hrms/employees")
-
 public class HrmsRestController {
 
     @Autowired
@@ -50,10 +49,10 @@ public class HrmsRestController {
         return null;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void post(@RequestBody Associate associate){
+    @PostMapping
+    public void post(@RequestBody Employee associate){
         System.out.println("Associate Details are  " + associate.toString());
 
-        hrmsService.save(EmployeeMapper.mapEmployee(associate));
+        hrmsService.save(associate);
     }
 }
