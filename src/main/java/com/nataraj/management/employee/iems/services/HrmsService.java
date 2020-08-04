@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HrmsService {
@@ -16,7 +18,14 @@ public class HrmsService {
 
     @Transactional("hrmsTransactionManager")
     public void save(Employee employee){
-        hrmsDao.save(employee);
+        System.out.println("Employee details are " + employee);
+        System.out.println("Employee DAO is " + hrmsDao);
+        try{
+            hrmsDao.save(employee);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+
     }
 
     @Transactional("hrmsTransactionManager")
@@ -37,12 +46,27 @@ public class HrmsService {
         throw new RuntimeException("Employee Not Found");
     }
 
-    public void provideIncrement(Double increment,String place){
-        //hrmsDao.listByLocation(place);
-        //hrmsDao.updateSalary(increment,place);
-        //hrmsDao.findByLocation();
+    @Transactional("hrmsTransactionManager")
+    public List<Employee> provideIncrement(Double increment,String place){
+        List<Employee> employees = hrmsDao.findByLocation(place);
+        /**
+         * Saving by using DAO method as it would automatically call em.persist()
+         * or em.save() behind the scene. However, custom query is useful when
+         * we want to update only a few fields
+         * employees.stream().map((e) -> e.updateSalary(increment)).forEach(hrmsDao::save);
+         */
+        employees.stream().map((e)-> e.updateSalary(increment)).forEach(
+                (e) -> hrmsDao.updateSalary(e.getSalary(),e.getId())
+        );
+        return employees;
+
     }
 
+    @Transactional
+    public void findMaxSalary(String searchKey, String searchValue){
+
+
+    }
 
 
 }

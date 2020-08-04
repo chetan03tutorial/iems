@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 @Entity
 @Table(name="EMPLOYEE_DETAILS")
-@Getter
-@Setter
-
 public class Employee {
 
     @Id
@@ -95,5 +92,14 @@ public class Employee {
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    public Employee updateSalary(Double percentage){
+        this.salary = salary + (percentage*salary/100) ;
+        return this;
+    }
+
+    public String toString(){
+        return "Employee details are = " + this.id + ", employee name " + this.name + " = ";
     }
 }

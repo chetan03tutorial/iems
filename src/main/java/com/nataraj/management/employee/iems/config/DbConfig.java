@@ -15,7 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 /**
  * This is a configuration class for configuring the datasource,r JPA Vendor specific properties and Transaction Manager
@@ -38,6 +37,7 @@ public class DbConfig {
 
     @Autowired
     public DbConfig(Environment environment) {
+        System.out.println("Initializing DBCONFIG");
         this.environment = environment;
     }
 
