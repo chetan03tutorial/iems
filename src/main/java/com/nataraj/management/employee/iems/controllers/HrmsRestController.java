@@ -1,10 +1,14 @@
 package com.nataraj.management.employee.iems.controllers;
 
 
+import com.nataraj.management.employee.iems.cache.CacheManager;
+import com.nataraj.management.employee.iems.cache.EmployeeCacheManager;
 import com.nataraj.management.employee.iems.entities.Employee;
 import com.nataraj.management.employee.iems.mappers.EmployeeMapper;
 import com.nataraj.management.employee.iems.model.request.Associate;
+import com.nataraj.management.employee.iems.model.response.SalaryRangeResponse;
 import com.nataraj.management.employee.iems.services.HrmsService;
+import org.hibernate.annotations.GeneratorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,34 +24,43 @@ public class HrmsRestController {
     @Autowired
     private HrmsService hrmsService;
 
-    Predicate<String> place = "loc"::equalsIgnoreCase,
+    @Autowired
+    private EmployeeCacheManager cacheManager;
+
+    /*public final Predicate<String> place = "loc"::equalsIgnoreCase,
             supervisor = "su"::equalsIgnoreCase,
             bu = "bu"::equalsIgnoreCase;
-    Predicate<String> searchKeyPredicate = bu.or(place).or(supervisor);
+    Predicate<String> searchKeyPredicate = bu.or(place).or(supervisor);*/
+
+
+    @GetMapping("/{place}")
+    public List<Employee> employees(@PathVariable("place") String place){
+        return hrmsService.getEmployeeByPlace(place);
+    }
 
     @PutMapping("/place/{place}/salary/{increment}")
     public List<Employee> employee(@PathVariable("place") String place,
                              @PathVariable("increment") Double increment ){
-        System.out.println("Searching employees for " + place );
         List<Employee> employee = hrmsService.provideIncrement(increment,place);
         return employee;
     }
 
     @GetMapping("/salaries/{searchKey}/{searchValue}")
     public Double getMaxSalary(@PathVariable("searchKey") String searchKey,
-                               @PathVariable("searchValue") String searchValue){
+                                       @PathVariable("searchValue") String searchValue){
 
+        Double result = new Double(-1);
         Predicate<String> searchKeyPredicate = getSearchKeyPredicate();
         boolean isSearchKeyValid  = searchKeyPredicate.test(searchKey);
         if(isSearchKeyValid){
-            hrmsService.findMaxSalary(searchKey,searchValue);
+             result = hrmsService.findMaxSalary(searchKey,searchValue);
         }
-        return null;
+        return result;
     }
 
     @GetMapping("/salaries/{title}")
-    public Double getSalaryRange(@PathVariable("title") String title){
-        return null;
+    public SalaryRangeResponse getSalaryRange(@PathVariable("title") String title){
+        return hrmsService.findSalaryRangeByTitle(title);
     }
 
     @GetMapping("/hierarchy/{supervisorId}")
@@ -55,24 +68,17 @@ public class HrmsRestController {
         return null;
     }
 
-    @GetMapping
-    public List<String> employees(){
-        return null;
-    }
-
     @PostMapping
     public void post(@RequestBody Associate associate){
-        System.out.println("Associate Details are  " + associate.toString());
-
-        System.out.println("HRMS Service Id is " + hrmsService);
         hrmsService.save(EmployeeMapper.mapEmployee(associate));
     }
 
-    public boolean validateSearchKey(String searchKey){
+    private boolean validateSearchKey(String searchKey){
         List<String> lists = Arrays.asList("su","loc","bu");
         return Stream.of(searchKey).anyMatch(lists::contains);
     }
-    public Predicate<String> getSearchKeyPredicate() {
+
+    private Predicate<String> getSearchKeyPredicate() {
         Predicate<String> place = "loc"::equalsIgnoreCase,
                 supervisor = "su"::equalsIgnoreCase,
                 bu = "bu"::equalsIgnoreCase;

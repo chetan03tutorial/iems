@@ -1,14 +1,13 @@
 package com.nataraj.management.employee.iems.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
 
 @Component
 public class CacheManager<K,V> {
@@ -17,6 +16,7 @@ public class CacheManager<K,V> {
     private HashOperations<K,Object,V> hashOperations;
     private ListOperations<K,V> listOperations;
     private ValueOperations<K,V> valueOperations;
+    private SetOperations<K,V> setOperations;
 
     @Autowired
     public CacheManager(RedisTemplate<K,V> redisTemplate){
@@ -24,6 +24,7 @@ public class CacheManager<K,V> {
         this.hashOperations = redisTemplate.opsForHash();
         this.listOperations = redisTemplate.opsForList();
         this.valueOperations = redisTemplate.opsForValue();
+        this.setOperations = redisTemplate.opsForSet();
     }
 
     public void hashPut(K key, Object itemKey, V value){
@@ -60,5 +61,13 @@ public class CacheManager<K,V> {
 
     public List<V> listGet(K key){
         return listOperations.range(key,0,-1);
+    }
+
+    public Set<V> setMembers(K key){
+        return setOperations.members(key);
+    }
+
+    public void setAdd(K key, V value){
+        setOperations.add(key, value);
     }
 }

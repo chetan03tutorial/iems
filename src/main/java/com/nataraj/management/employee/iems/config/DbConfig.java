@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -33,7 +34,7 @@ public class DbConfig {
 
     @Autowired
     private Environment environment;
-    private static final JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+    //private static final JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
 
     @Autowired
     public DbConfig(Environment environment) {
@@ -57,7 +58,7 @@ public class DbConfig {
         // Read command separated string from properties file and convert in into streams and then array of string using java 8
         
         entityManagerFactoryBean.setPackagesToScan(new String[]{"com.nataraj.management.employee.iems.entities"}); //new String[] {environment.getProperty("db.jpa.entity.packageToScan")}
-        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
         entityManagerFactoryBean.setJpaProperties(jpaProperties());
         return entityManagerFactoryBean;
     }
@@ -78,7 +79,10 @@ public class DbConfig {
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
-        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        jpaVendorAdapter.setShowSql(true);
+        jpaVendorAdapter.setDatabase(Database.MYSQL);
+        jpaVendorAdapter.setGenerateDdl(true);
         return jpaVendorAdapter;
     }
 
@@ -86,6 +90,8 @@ public class DbConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", environment.getProperty("spring.hbn.hbm2ddl.auto"));
         properties.setProperty("hibernate.dialect", environment.getProperty("spring.hbn.dialect"));
+        properties.setProperty("org.hibernate.SQL", environment.getProperty("spring.hbn.show-sql"));
+        properties.setProperty("showSQL", environment.getProperty("spring.hbn.show-sql"));
         return properties;
     }
 

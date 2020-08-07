@@ -1,14 +1,14 @@
 package com.nataraj.management.employee.iems.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
-import org.springframework.data.jpa.repository.Query;
+import java.io.Serializable;
 
 @Entity
 @Table(name="EMPLOYEE_DETAILS")
-public class Employee {
+
+public class Employee implements Serializable {
+
+    private static final long SerialVersionUID=10l;
 
     @Id
     @Column(name="EMPLOYEE_ID")
@@ -29,6 +29,19 @@ public class Employee {
     private String competencies;
     @Column(name="SALARY")
     private Double salary;
+
+    public Employee(){
+
+    }
+    
+    public Employee(Long id, String name, String place, String title, String bu, Double salary) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.bu = bu;
+        this.place = place;
+        this.salary = salary;
+    }
 
     public Long getId() {
         return id;

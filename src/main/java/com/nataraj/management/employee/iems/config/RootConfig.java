@@ -1,9 +1,11 @@
 package com.nataraj.management.employee.iems.config;
 
 import com.nataraj.management.employee.iems.markers.IgnoreDuringScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 @Configuration
 @ComponentScan(
@@ -12,7 +14,6 @@ import org.springframework.context.annotation.Import;
     )
 @Import(ConfigSelector.class)
 public class RootConfig {
-
 
     public RootConfig(){
         System.out.println("Initializing the ROOT CONFIG constructor");
