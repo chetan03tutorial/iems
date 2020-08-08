@@ -69,13 +69,15 @@ public class HrmsService {
     }
 
     @Transactional
-    public Double findMaxSalary(String searchKey, String searchValue){
+    public SalaryRangeResponse findMaxSalary(String searchKey, String searchValue){
+        //SalaryRangeResponse maxSalary;
+        Double salary;
         if("bu".equalsIgnoreCase(searchKey)){
-            return hrmsDslQueryDao.getMaxSalaryByBU(searchValue.toLowerCase());
-        }else if("loc".equalsIgnoreCase(searchKey)){
-            return hrmsDslQueryDao.getMaxSalaryByLocation(searchValue.toLowerCase());
+             salary = hrmsDslQueryDao.getMaxSalaryByBU(searchValue.toLowerCase());
+        }else /*if("loc".equalsIgnoreCase(searchKey))*/{
+            salary = hrmsDslQueryDao.getMaxSalaryByLocation(searchValue.toLowerCase());
         }
-        return Double.valueOf(-1);
+        return new SalaryRangeResponse(Double.valueOf(-1),salary);
     }
 
     @Transactional
@@ -90,9 +92,6 @@ public class HrmsService {
         employees = Optional.of(employeeCacheManager.getEmployeeByPlace(place)).orElseGet(ArrayList::new);
 
         if(employees.isEmpty()){
-            System.out.println("Did not find the employees in cache");
-            System.out.println("Fetching the employees from DB");
-            System.out.println("Persisting the Employee in the Cache");
             employees = Optional.ofNullable(hrmsDao.findByLocation(place)).orElseGet(ArrayList::new);
             employees.stream().forEach(employeeCacheManager::cacheEmployee);
         }else{

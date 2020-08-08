@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 
 
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 
 import javax.persistence.EntityManager;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 
-
+@Repository
 public interface HrmsDao extends JpaRepository<Employee,Integer>, QuerydslPredicateExecutor<Employee>{
 
     @Query("select e from Employee e where e.place = :place")

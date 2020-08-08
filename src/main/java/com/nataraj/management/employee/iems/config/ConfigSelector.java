@@ -5,10 +5,9 @@ import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.stereotype.Component;
 
-/*@Component*/
+
 public class ConfigSelector implements ImportSelector{
 
-    /*@Autowired*/
     public ConfigSelector(){
         System.out.println("Initializing CONFIG_SELECTOR");
     }
@@ -23,7 +22,7 @@ public class ConfigSelector implements ImportSelector{
             case "prod" :
                 return new String[]{DbConfig.class.getName(), RedisConfig.class.getName(),WebConfig.class.getName()};
             case "test" :
-                return new String[]{DbConfig.class.getName(), RedisConfig.class.getName(),WebConfig.class.getName()};
+                return new String[]{DbConfig.class.getName(), RedisConfig.class.getName()};
             default:
                 throw new RuntimeException("Illegal Environment Selection");
         }

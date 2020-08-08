@@ -1,33 +1,22 @@
 package com.nataraj.management.employee.iems.services;
 
-import com.nataraj.management.employee.iems.TestConfig;
 import com.nataraj.management.employee.iems.cache.EmployeeCacheManager;
 import com.nataraj.management.employee.iems.dao.HrmsDao;
 import com.nataraj.management.employee.iems.dao.HrmsDslQueryDao;
 import com.nataraj.management.employee.iems.entities.Employee;
-import org.junit.Assert;
+import com.nataraj.management.employee.iems.model.response.SalaryRangeResponse;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+
 import static org.mockito.Mockito.*;
-import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestConfig.class)
-public class HrmsServiceTest {
+public class HrmsServiceTest extends BaseServiceTest {
 
 
     @MockBean
@@ -42,12 +31,6 @@ public class HrmsServiceTest {
     @Autowired
     private HrmsService hrmsService;
 
-    private List<Employee> employees;
-
-    static {
-        System.setProperty("env","test");
-    }
-
 
     @Before
     public void setup(){
@@ -57,6 +40,11 @@ public class HrmsServiceTest {
 
         when(hrmsDao.findByLocation("Mumbai")).thenReturn(employees);
         when(hrmsDao.updateSalary(anyDouble(),anyLong())).thenReturn(1);
+        when(hrmsDslQueryDao.getMaxSalaryByBU(anyString())).
+                thenReturn(Double.valueOf(Double.valueOf(1000)));
+        when(hrmsDslQueryDao.getMaxSalaryByLocation(anyString())).
+                thenReturn(Double.valueOf(Double.valueOf(1000)));
+
 
     }
 
@@ -67,6 +55,22 @@ public class HrmsServiceTest {
         List<Employee> employees = hrmsService.provideIncrement(incPercentage,place);
         employees.stream().forEach((Employee e) ->
                 assertEquals(e.getSalary(),Double.valueOf(1100)));
+    }
+
+    @Test
+    public void testSuccess_WhenMaxSalaryIsFound(){
+        Double expectedSalary = Double.valueOf(1000);
+        assertEquals(expectedSalary,hrmsService.findMaxSalary("bu","Senior Artist").getMax());
+        assertEquals(expectedSalary,hrmsService.findMaxSalary("loc","Senior Artist").getMax());
+    }
+
+    @Test
+    public void testSuccess_whenSalaryRangeIsSearched(){
+        SalaryRangeResponse expected = new SalaryRangeResponse(Double.valueOf(100), Double.valueOf(1000));
+        when(hrmsDao.findSalaryRangeByTitle(anyString())).thenReturn(expected);
+        SalaryRangeResponse actual = hrmsService.findSalaryRangeByTitle("Senior Artist");
+        assertEquals(expected.getMin(),Double.valueOf(100));
+        assertEquals(expected.getMax(),Double.valueOf(1000));
     }
 
 }

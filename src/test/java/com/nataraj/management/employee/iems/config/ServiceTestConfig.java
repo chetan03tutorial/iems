@@ -1,4 +1,4 @@
-package com.nataraj.management.employee.iems;
+package com.nataraj.management.employee.iems.config;
 
 import com.nataraj.management.employee.iems.dao.HrmsDao;
 import com.nataraj.management.employee.iems.markers.IgnoreDuringScan;
@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(
-        basePackages = {"com.nataraj.management.employee.iems"},
+        basePackages = {"com.nataraj.management.employee.iems.services"},
         excludeFilters = {@ComponentScan.Filter(IgnoreDuringScan.class)}
 )
-public class TestConfig {
+public class ServiceTestConfig {
 
     static {
         System.setProperty("env","test");

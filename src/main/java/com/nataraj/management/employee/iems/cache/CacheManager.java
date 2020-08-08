@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Component
@@ -29,14 +30,17 @@ public class CacheManager<K,V> {
 
     public void hashPut(K key, Object itemKey, V value){
         hashOperations.put(key,itemKey,value);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 
     public void hashPutAll(K key, Map<Object,V> valueMap){
         hashOperations.putAll(key,valueMap);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 
     public void hashPutIfAbsent(K key, Object itemKey, V value){
         hashOperations.putIfAbsent(key,itemKey,value);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 
     public V hashGet(K key, Object itemKey){
@@ -49,6 +53,7 @@ public class CacheManager<K,V> {
 
     public void valuePut(K key, V value){
         valueOperations.set(key, value);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 
     public V valueGet(K key){
@@ -57,6 +62,7 @@ public class CacheManager<K,V> {
 
     public void listSet(K key, V value){
         listOperations.rightPush(key, value);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 
     public List<V> listGet(K key){
@@ -69,5 +75,6 @@ public class CacheManager<K,V> {
 
     public void setAdd(K key, V value){
         setOperations.add(key, value);
+        redisTemplate.expire(key, 10, TimeUnit.MINUTES);
     }
 }
