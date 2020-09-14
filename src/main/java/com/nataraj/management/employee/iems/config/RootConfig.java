@@ -11,14 +11,14 @@ import org.springframework.core.env.ConfigurableEnvironment;
 @ComponentScan(
     basePackages = {"com.nataraj.management.employee.iems"},
     excludeFilters = {@ComponentScan.Filter(IgnoreDuringScan.class)}
-    )
+)
 @Import(ConfigSelector.class)
 public class RootConfig {
 
-    public RootConfig(){
+    public RootConfig() {
         System.out.println("Initializing the ROOT CONFIG constructor");
     }
-
+}
 
     /*@Bean
     public ServletWebServerFactory jettyWebServerFactory(){
@@ -135,4 +135,3 @@ public static PropertySourcesPlaceholderConfigurer properties(){
     pspc.setIgnoreUnresolvablePlaceholders( true );
     return pspc;
 }*/
-}
